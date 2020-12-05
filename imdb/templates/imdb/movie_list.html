@@ -1,0 +1,74 @@
+{% load widget_tweaks %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'imdb/style.css' %}">
+{% block content %}
+<form method="get">
+    <div class="well">
+        <h4 style="margin-top: 0">Filter</h4>
+        <div class="row">
+            <div class="form-group col-sm-4 col-md-3">
+                {{ filter.form.name.label_tag }}
+                {% render_field filter.form.name class="form-control" %}
+            </div>
+            <div class="form-group col-sm-4 col-md-3">
+                {{ filter.form.director.label_tag }}
+                {% render_field filter.form.director class="form-control" %}
+            </div>
+            <div class="form-group col-sm-4 col-md-3">
+                {{ filter.form.imdb_score.label_tag }}
+                {% render_field filter.form.imdb_score class="form-control" %}
+            </div>
+            <div class="form-group col-sm-4 col-md-3">
+                {{ filter.form.popularity.label_tag }}
+                {% render_field filter.form.popularity class="form-control" %}
+            </div>
+            <div class="form-group col-sm-8 col-md-6">
+                {{ filter.form.genres.label_tag }}
+                <div>
+                    {% for genre in filter.form.genres %}
+                    <label class="checkbox-inline">
+                        {{genre}}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <span class="glyphicon glyphicon-search"></span> Search
+        </button>
+    </div>
+</form>
+
+<table id="movies">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Director</th>
+        <th>Imdb Score</th>
+        <th>99 Popularity</th>
+        <th>Genres</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for movie in filter.qs %}
+    <tr>
+        <td>{{ movie.name }}</td>
+        <td>{{ movie.director }}</td>
+        <td>{{ movie.imdb_score }}</td>
+        <td>{{ movie.popularity }}</td>
+        <td>
+            {% for genre in movie.genres.all %}
+            {{ genre.name }}
+            {% empty %}
+            <em class="text-muted">No genre</em>
+            {% endfor %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">No data</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
